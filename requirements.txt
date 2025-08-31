@@ -2,3 +2,4 @@ streamlit
 kafka-python
 python-dotenv
 confluent-kafka
+requests
