@@ -87,68 +87,6 @@ def generar_transaccion():
 st.title("🛒 Simulador de Compras en Línea con Detección de Fraude")
 st.write("Realiza una compra y verifica si es detectada como fraude o no.")
 
-# Sección de configuración y debug
-with st.expander("⚙️ Configuración y Debug"):
-    st.write("**Configuración actual:**")
-    st.write(f"- **Kafka Broker:** {KAFKA_BROKER or 'No configurado'}")
-    st.write(f"- **Kafka Topic:** {KAFKA_TOPIC_INPUT or 'No configurado'}")
-    st.write(f"- **Endpoint FastAPI:** {ENDPOINT}")
-    
-    # Botón para probar conectividad
-    if st.button("🔍 Probar conectividad con FastAPI"):
-        try:
-            test_url = f"{ENDPOINT}/health" if ENDPOINT else "No endpoint configurado"
-            if ENDPOINT:
-                st.info(f"🔗 Probando URL: {test_url}")
-                response = requests.get(test_url, timeout=5)
-                
-                st.write(f"**Código de respuesta:** {response.status_code}")
-                st.write(f"**Headers de respuesta:**")
-                st.json(dict(response.headers))
-                
-                if response.status_code == 200:
-                    st.success("✅ Conexión exitosa con FastAPI")
-                    try:
-                        response_data = response.json()
-                        st.write("**Contenido de la respuesta:**")
-                        st.json(response_data)
-                    except:
-                        st.write("**Contenido de la respuesta (texto):**")
-                        st.text(response.text)
-                else:
-                    st.warning(f"⚠️ FastAPI responde con código: {response.status_code}")
-                    st.write("**Contenido de la respuesta:**")
-                    st.text(response.text)
-            else:
-                st.error("❌ No hay endpoint configurado")
-        except requests.exceptions.RequestException as e:
-            st.error(f"❌ Error de conexión: {e}")
-            st.write("**Detalles del error:**")
-            st.text(str(e))
-    
-    # Probar otros endpoints comunes
-    if st.button("🔍 Probar otros endpoints"):
-        endpoints_to_test = [
-            "/",
-            "/health",
-            "/docs",
-            "/openapi.json",
-            "/status",
-            "/ping"
-        ]
-        
-        for endpoint in endpoints_to_test:
-            try:
-                test_url = f"{ENDPOINT}{endpoint}"
-                response = requests.get(test_url, timeout=3)
-                st.write(f"**{endpoint}** - Código: {response.status_code}")
-                if response.status_code == 200:
-                    st.success(f"✅ {endpoint} disponible")
-                else:
-                    st.warning(f"⚠️ {endpoint} - {response.status_code}")
-            except requests.exceptions.RequestException as e:
-                st.error(f"❌ {endpoint} - Error: {str(e)[:100]}...")
-
 st.subheader("🛍️ Realiza una Compra")
 usuario = st.text_input("ID del Usuario (opcional)", f"U{random.randint(100, 999)}")
 monto = st.number_input("Monto de la compra ($) (opcional)", min_value=1.0, max_value=500.0, value=50.0, step=5.0)
@@ -176,13 +114,10 @@ if realizar_compra:
     # Esperar la respuesta del modelo a través del endpoint de FastAPI mediante polling
     st.subheader("🔍 Esperando resultado de la predicción...")
     
-    # Mostrar información de debug
-    st.info(f"🔗 Consultando endpoint: {ENDPOINT}/transaction/{transaccion['transaction_id']}")
-    
     api_url = f'{ENDPOINT}/transaction/{transaccion["transaction_id"]}'
 
-    timeout = 30  # segundos máximos de espera (aumentado)
-    interval = 2  # intervalo de consulta en segundos (aumentado)
+    timeout = 30  # segundos máximos de espera
+    interval = 2  # intervalo de consulta en segundos
     start_time = time.time()
     data = None
     attempts = 0
@@ -224,19 +159,18 @@ if realizar_compra:
     
     if data is None:
         st.error("❌ No se pudo obtener el resultado de la predicción.")
-        st.warning("Posibles causas:")
-        st.write("- El endpoint de FastAPI no está disponible")
-        st.write("- La transacción aún se está procesando")
-        st.write("- Problemas de conectividad")
-        st.write(f"- URL del endpoint: {ENDPOINT}")
+        st.warning("**Posibles causas:**")
+        st.write("• El endpoint `/transaction/{id}` no está implementado en el backend")
+        st.write("• El backend no está procesando las transacciones de Kafka")
+        st.write("• El modelo de ML no está funcionando correctamente")
+        st.write("• Problemas de sincronización entre frontend y backend")
+        st.write("• El backend está en otra rama y no está desplegado")
         
-        # Mostrar información de debug
-        with st.expander("🔍 Información de Debug"):
-            st.write(f"**Transaction ID:** {transaccion['transaction_id']}")
-            st.write(f"**Endpoint:** {ENDPOINT}")
-            st.write(f"**URL completa:** {api_url}")
-            st.write(f"**Intentos realizados:** {attempts}")
-            st.write(f"**Timeout configurado:** {timeout} segundos")
+        st.info("**Solución sugerida:**")
+        st.write("1. Verificar que el backend esté desplegado y funcionando")
+        st.write("2. Implementar el endpoint `/transaction/{id}` en el backend")
+        st.write("3. Asegurar que el procesamiento de Kafka esté funcionando")
+        st.write("4. Verificar la configuración de variables de entorno")
     else:
         status_text.text("✅ Resultado obtenido!")
         if data["status"] == "fraude":
