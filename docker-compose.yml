@@ -213,7 +213,7 @@ services:
         condition: service_healthy
     environment:
       # Configuración de base de datos PostgreSQL
-      DATABASE_URL: postgresql://fraud_user:fraud_password@postgres:5432/fraud_detection
+      DATABASE_URL=postgresql://neondb_owner:npg_mGpxdXIOFj12@ep-young-scene-ad8xwh1z-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
       
       # Configuración de Kafka
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
