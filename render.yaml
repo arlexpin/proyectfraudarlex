@@ -1,4 +1,4 @@
-# Render.yaml - Configuración para despliegue en Render
+# Render.yaml - Configuración optimizada para despliegue en Render
 services:
   - type: web
     name: fraud-simulator
@@ -13,5 +13,23 @@ services:
       - key: STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION
         value: false
       - key: STREAMLIT_BROWSER_GATHER_USAGE_STATS
+        value: false
+      - key: STREAMLIT_SERVER_MAX_UPLOAD_SIZE
+        value: "200"
+      - key: STREAMLIT_SERVER_MAX_MESSAGE_SIZE
+        value: "200"
+      - key: STREAMLIT_SERVER_ENABLE_WEBSOCKET_COMPRESSION
+        value: false
+      - key: STREAMLIT_SERVER_RUN_ON_SAVE
+        value: false
+      - key: STREAMLIT_SERVER_ALLOW_RUN_ON_SAVE
+        value: false
+      - key: STREAMLIT_CLIENT_TOOLBAR_MODE
+        value: minimal
+      - key: STREAMLIT_CLIENT_SHOW_SIDEBAR_NAVIGATION
+        value: false
+      - key: STREAMLIT_GLOBAL_DEVELOPMENT_MODE
+        value: false
+      - key: STREAMLIT_GLOBAL_SHOW_WARNING_ON_DIRECT_EXECUTION
         value: false
     healthCheckPath: /

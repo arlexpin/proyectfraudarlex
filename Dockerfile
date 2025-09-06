@@ -17,14 +17,27 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copia toda la aplicación de una vez
 COPY . .
 
+# Hacer el script de inicio ejecutable
+RUN chmod +x start.sh
+
 # Expone el puerto en el que se ejecuta Streamlit
 EXPOSE 8501
 
-# Configurar variables de entorno para Streamlit
+# Configurar variables de entorno específicas para Render
 ENV STREAMLIT_SERVER_HEADLESS=true
 ENV STREAMLIT_SERVER_ENABLE_CORS=false
 ENV STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
 ENV STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+ENV STREAMLIT_SERVER_MAX_UPLOAD_SIZE=200
+ENV STREAMLIT_SERVER_MAX_MESSAGE_SIZE=200
+ENV STREAMLIT_SERVER_ENABLE_WEBSOCKET_COMPRESSION=false
+ENV STREAMLIT_SERVER_RUN_ON_SAVE=false
+ENV STREAMLIT_SERVER_ALLOW_RUN_ON_SAVE=false
+ENV STREAMLIT_CLIENT_TOOLBAR_MODE=minimal
+ENV STREAMLIT_CLIENT_SHOW_SIDEBAR_NAVIGATION=false
+ENV STREAMLIT_GLOBAL_DEVELOPMENT_MODE=false
+ENV STREAMLIT_GLOBAL_SHOW_WARNING_ON_DIRECT_EXECUTION=false
+ENV STREAMLIT_SERVER_FILE_WATCHER_TYPE=none
 
-# Comando para ejecutar la aplicación con configuración optimizada
-CMD ["streamlit", "run", "app.py", "--server.address", "0.0.0.0", "--server.port", "8501", "--server.headless", "true"]
+# Usar el script de inicio personalizado
+CMD ["./start.sh"]
