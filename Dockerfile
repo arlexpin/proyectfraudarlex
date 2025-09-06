@@ -14,14 +14,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copia la configuración de Streamlit primero
-COPY .streamlit/ .streamlit/
-
-# Copia el resto de la aplicación
+# Copia toda la aplicación de una vez
 COPY . .
-
-# Crear directorio para archivos estáticos de Streamlit
-RUN mkdir -p /app/.streamlit/static
 
 # Expone el puerto en el que se ejecuta Streamlit
 EXPOSE 8501
