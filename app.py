@@ -29,6 +29,11 @@ producer_conf = {
     'sasl.mechanisms': 'PLAIN',
     'sasl.username': KAFKA_USERNAME,
     'sasl.password': KAFKA_PASSWORD,
+    'client.id': 'streamlit-producer',
+    'acks': 'all',
+    'retries': 3,
+    'batch.size': 16384,
+    'linger.ms': 1,
 }
 
 # Crear el Producer
