@@ -47,6 +47,8 @@ volumes:
     driver: local
   zookeeper_data:   # Datos de Zookeeper
     driver: local
+  zookeeper_logs:   # Logs de Zookeeper
+    driver: local
 
 # =============================================================================
 # SERVICIOS
@@ -102,18 +104,16 @@ services:
       ZOOKEEPER_MAX_CLIENT_CNXNS: 60
       ZOOKEEPER_SYNC_LIMIT: 2
       ZOOKEEPER_INIT_LIMIT: 5
+      # Configuración de directorios de datos
+      ZOOKEEPER_DATA_DIR: /var/lib/zookeeper/data
+      ZOOKEEPER_DATA_LOG_DIR: /var/lib/zookeeper/log
     ports:
       - "2181:2181"  # Puerto para conexiones externas
     volumes:
       - zookeeper_data:/var/lib/zookeeper/data
-      - zookeeper_data:/var/lib/zookeeper/log
+      - zookeeper_logs:/var/lib/zookeeper/log
     networks:
       - fraud-detection
-    healthcheck:
-      test: ["CMD-SHELL", "echo ruok | nc localhost 2181 | grep imok"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   # ========================================================================
   # KAFKA - SISTEMA DE MENSAJERÍA
@@ -125,8 +125,7 @@ services:
     container_name: fraud-kafka
     restart: unless-stopped
     depends_on:
-      zookeeper:
-        condition: service_healthy
+      - zookeeper
     environment:
       # Configuración del broker
       KAFKA_BROKER_ID: 1
