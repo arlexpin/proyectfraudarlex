@@ -1,5 +1,5 @@
-streamlit
-kafka-python
-python-dotenv
-confluent-kafka
-requests
+streamlit>=1.28.0,<2.0.0
+kafka-python>=2.0.2
+python-dotenv>=1.0.0
+confluent-kafka>=2.3.0
+requests>=2.31.0
