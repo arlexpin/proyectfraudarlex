@@ -20,7 +20,7 @@ KAFKA_BROKER = os.getenv("KAFKA_BROKER")
 KAFKA_USERNAME = os.getenv("KAFKA_USERNAME")
 KAFKA_PASSWORD = os.getenv("KAFKA_PASSWORD")
 KAFKA_TOPIC_INPUT = os.getenv("KAFKA_TOPIC_INPUT")
-ENDPOINT = os.getenv("ENDPOINT")
+ENDPOINT = os.getenv("ENDPOINT", "https://proyectfraudarlex.onrender.com")
 
 # Configuración para el Producer de Confluent Kafka
 producer_conf = {
