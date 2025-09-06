@@ -6,6 +6,7 @@ sobre transacciones. Se emplean modelos tradicionales cargados con joblib.
 """
 
 import logging
+import os
 import numpy as np
 import pandas as pd
 import joblib
@@ -36,10 +37,12 @@ def load_models():
     """
     models = {}
     try:
-        models['logistic'] = joblib.load('/app/model/logistic_regression_model.pkl')
-        models['kneighbors'] = joblib.load('/app/model/knears_neighbors_model.pkl')
-        models['svc'] = joblib.load('/app/model/svc_model.pkl')
-        models['tree'] = joblib.load('/app/model/decision_tree_model.pkl')
+        # Usar ruta relativa que funciona tanto en Docker como localmente
+        model_path = os.path.join(os.path.dirname(__file__), 'model')
+        models['logistic'] = joblib.load(os.path.join(model_path, 'logistic_regression_model.pkl'))
+        models['kneighbors'] = joblib.load(os.path.join(model_path, 'knears_neighbors_model.pkl'))
+        models['svc'] = joblib.load(os.path.join(model_path, 'svc_model.pkl'))
+        models['tree'] = joblib.load(os.path.join(model_path, 'decision_tree_model.pkl'))
         logger.info("Modelos cargados exitosamente.")
     except Exception as e:
         logger.error(f"Error cargando modelos: {str(e)}")
